@@ -20,7 +20,7 @@ const FilterWidget = () => {
   }
   return (
     <Select onValueChange={handleFilterSearch} defaultValue={searchParams.get('query')?.toString()}>
-      <SelectTrigger className="w-[180px]">
+      <SelectTrigger className="w-[180px]" role='button'>
         <SelectValue placeholder='Filter Items...' aria-placeholder="Select Type" />
       </SelectTrigger>
       <SelectContent>
