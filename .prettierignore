@@ -1,0 +1,7 @@
+.prettierignore
+public/
+.gitignore
+.husky/
+.next/
+.vercel/
+node_modules/
