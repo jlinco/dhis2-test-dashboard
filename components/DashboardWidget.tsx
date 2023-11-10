@@ -11,39 +11,17 @@ import { Dashboard } from '@/lib/data'
 import { FileType, Mails, Star, Map } from 'lucide-react'
 import { renderVizTypeIcons } from '@/lib/helperWidgets'
 import { useSearchParams } from 'next/navigation'
-import { useLocalStorage } from '@/lib/storageHook'
+import { Toggle } from './ui/toggle'
 
 const DashboardWidget = ({
   allDashboards
 }: {
   allDashboards: Array<Dashboard>
 }) => {
-  const [items, setValue] = useLocalStorage<string[]>('starredDashboards', [])
+  const [starred, setStarred] = useState<Array<string> | undefined>(undefined)
+
   const searchParams = useSearchParams()
 
-  const [starredDashboards, setStarredDashboards] = useState<string[]>(items)
-
-  const updateStarredDashboards = (e: React.MouseEvent<HTMLElement>) => {
-    const dashId = e.currentTarget.id
-    const starredIdx = starredDashboards.indexOf(dashId)
-    if (starredIdx === -1) {
-      const newItems = [...starredDashboards, dashId]
-      setStarredDashboards(newItems)
-      setValue(newItems)
-    } else {
-      const splicedItems = starredDashboards.toSpliced(starredIdx, 1)
-      setStarredDashboards(splicedItems)
-      setValue(splicedItems)
-    }
-  }
-
-  useEffect(() => {
-    if (items) {
-      setStarredDashboards(items)
-    } else {
-      setStarredDashboards([])
-    }
-  }, [items])
   const renderContent = (
     nodeId: React.Key | null | undefined,
     type: string,
@@ -99,6 +77,27 @@ const DashboardWidget = ({
     }
   }
 
+  const handleStarredPressed = (id: string, toggled: boolean) => {
+    if (starred !== undefined) {
+      const newStarred = toggled
+        ? [...starred, id]
+        : starred.filter((item) => item !== id)
+
+      const collection = JSON.stringify(newStarred)
+      window.localStorage.setItem('starred', collection)
+      setStarred(newStarred)
+    }
+  }
+
+  // Fetch the starred items from localStorage after the component has mounted
+  useEffect(() => {
+    const starredFromStorage = window.localStorage.getItem('starred')
+    if (starredFromStorage) {
+      setStarred(JSON.parse(starredFromStorage))
+    } else {
+      setStarred([])
+    }
+  }, [])
   return (
     <Accordion
       type="single"
@@ -115,19 +114,21 @@ const DashboardWidget = ({
               {item.displayName}
             </p>
           </AccordionTrigger>
-          <div className="absolute right-9 top-3">
-            <button
-              className="shadow-md bg-blue-300 rounded-sm w-[30px] h-[30px] justify-center items-center flex flex-col"
+          <div className="absolute right-9 top-2">
+            <Toggle
               aria-label="Toggle Star"
               id={item.id}
-              onClick={updateStarredDashboards}>
+              pressed={starred && starred.includes(item.id)}
+              onPressedChange={(toggled) =>
+                handleStarredPressed(item.id, toggled)
+              }>
               <Star
                 size={16}
                 fill={
-                  starredDashboards.includes(item.id) ? '#000000' : '#ffffff'
+                  starred && starred.includes(item.id) ? '#000000' : '#ffffff'
                 }
               />
-            </button>
+            </Toggle>
           </div>
           <AccordionContent>
             {item.dashboardItems.length > 0 ? (
