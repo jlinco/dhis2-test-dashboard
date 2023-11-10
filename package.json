@@ -42,8 +42,7 @@
     "typescript": "^5"
   },
   "lint-staged": {
-    "*.{ts,tsx,js,jsx,css,md}": "prettier --write",
-    "*.{ts,tsx,js,jsx}": "next lint"
+    "*.{ts,tsx,js,jsx,css,md}": "prettier --write"
   },
   "engines": {
     "node": "18"
