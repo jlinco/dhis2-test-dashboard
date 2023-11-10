@@ -12,11 +12,17 @@ pnpm dev
 bun dev
 ```
 
+To run tests:
+
+```bash
+npm run test:e2e
+```
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 The following features are available within the application
 
-# Learn More
+## Learn More
 
 - Users are able to see all dashboards returned by the API endpoint when the app loads
 - When clicking on the filter items, the dashboard is updated accordingly and the data persists across reloads, forward and back navigation flows
