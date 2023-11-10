@@ -8,6 +8,6 @@ test('Homepage should render properly', async ({ page }) => {
 
   // expect filter item to exist
   await expect(
-    page.getByRole('button', { name: 'Filter Items...' })
+    page.getByRole('button', { name: 'Filter Items: All Types' })
   ).toBeVisible()
 })
